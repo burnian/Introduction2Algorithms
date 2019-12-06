@@ -1,4 +1,4 @@
 Debug
-.user
-.vcxproj
-.filters
+*.user
+*.vcxproj
+*.filters
