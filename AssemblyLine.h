@@ -5,51 +5,89 @@
 *@Desc: 双装配线最快调度算法，输入两组装配线所有站的装配和切换时间，输出最快装配安排。
 *********************************************************/
 #pragma once
-#define MAX 10
+#include <iostream>
+#include <stack>
 
 namespace Bur {
-	template<int len>
-	float AssemblyLine(float(*station)[len], float(*transfer)[len + 1], int* rest) {
-		float minTime[2][MAX] = { {0}, {0} };
-		int minSrc[2][MAX] = { {0}, {0} };
-		float temp1, temp2, temp3;
-		minTime[0][0] = transfer[0][0] + station[0][0];
-		minTime[1][0] = transfer[1][0] + station[1][0];
-		for (int j = 1; j < len; j++) {
-			temp1 = minTime[0][j - 1];
-			temp2 = minTime[1][j - 1] + transfer[1][j];
+	struct Station {
+		int switchCost; // 从外线前一站转到该站的转换开销
+		int runCost; // 该站的运行开销
+		int minTime = 0; // 从起始站到该站的最短装配时间
+		int preLine = 0; // 装配到该站的前一站所属线号
+
+		Station(int _1, int _2) :switchCost(_1), runCost(_2) {};
+	};
+
+	//@param station[i][j] 存的是i号线j站，之所以不用链表存储station是因为之后还要用分治实现
+	//@param cnt 站数（不含终点站）
+	int AssemblyLineDP(Station*** s, int cnt) {
+		int temp1, temp2;
+		// 起始站处理 i=0
+		s[0][0]->minTime = s[0][0]->switchCost + s[0][0]->runCost;
+		s[1][0]->minTime = s[1][0]->switchCost + s[1][0]->runCost;
+		for (int i = 1; i < cnt; i++) {
+			// 处理0号线i站
+			temp1 = s[0][i - 1]->minTime;
+			temp2 = s[1][i - 1]->minTime + s[0][i]->switchCost;
 			if (temp1 < temp2) {
-				minSrc[0][j] = 0;
-				minTime[0][j] = temp1 + station[0][j];
+				s[0][i]->preLine = 0;
+				s[0][i]->minTime = temp1 + s[0][i]->runCost;
 			}
 			else {
-				minSrc[0][j] = 1;
-				minTime[0][j] = temp2 + station[0][j];
+				s[0][i]->preLine = 1;
+				s[0][i]->minTime = temp2 + s[0][i]->runCost;
 			}
-			temp1 = minTime[0][j - 1] + transfer[0][j];
-			temp2 = minTime[1][j - 1];
+			// 处理1号线i站
+			temp1 = s[0][i - 1]->minTime + s[1][i]->switchCost;
+			temp2 = s[1][i - 1]->minTime;
 			if (temp1 < temp2) {
-				minSrc[1][j] = 0;
-				minTime[1][j] = temp1 + station[1][j];
+				s[1][i]->preLine = 0;
+				s[1][i]->minTime = temp1 + s[1][i]->runCost;
 			}
 			else {
-				minSrc[1][j] = 1;
-				minTime[1][j] = temp2 + station[1][j];
+				s[1][i]->preLine = 1;
+				s[1][i]->minTime = temp2 + s[1][i]->runCost;
 			}
 		}
-		temp1 = minTime[0][len - 1] + transfer[0][len];
-		temp2 = minTime[1][len - 1] + transfer[1][len];
-		if (temp1 < temp2) {
-			temp3 = temp1;
-			rest[len - 1] = 0;
+		// 终点站处理
+		s[0][cnt]->preLine = 1;
+		s[0][cnt]->minTime = s[1][cnt - 1]->minTime + s[0][cnt]->switchCost;
+		s[1][cnt]->preLine = 0;
+		s[1][cnt]->minTime = s[0][cnt - 1]->minTime + s[1][cnt]->switchCost;
+
+		return s[0][cnt]->minTime < s[1][cnt]->minTime ? 0 : 1;
+	}
+
+	void PrintAssemblyLine(Station*** s, int line, int cnt) {
+		std::cout << s[line][cnt]->minTime << std::endl;
+		for (int i = cnt; i > 0; i--) {
+			line = s[line][i]->preLine;
+			std::cout << "(" << line + 1 << "," << i << ")" << std::endl;
 		}
-		else {
-			temp3 = temp2;
-			rest[len - 1] = 1;
-		}
-		for (int i = len - 1; i > 0; i--) {
-			rest[i - 1] = minSrc[rest[i]][i];
-		}
-		return temp3;
 	}
 }
+
+// test case:
+//int cnt = 6;
+//Bur::Station*** station = new Bur::Station**[2]{
+//	new Bur::Station*[cnt + 1] {
+//		new Bur::Station(2, 7),
+//		new Bur::Station(2, 9),
+//		new Bur::Station(1, 3),
+//		new Bur::Station(2, 4),
+//		new Bur::Station(2, 8),
+//		new Bur::Station(1, 4),
+//		new Bur::Station(2, 0) // 终点站为虚站
+//	},
+//	new Bur::Station*[cnt + 1] {
+//		new Bur::Station(4, 8),
+//		new Bur::Station(2, 5),
+//		new Bur::Station(3, 6),
+//		new Bur::Station(1, 4),
+//		new Bur::Station(3, 5),
+//		new Bur::Station(4, 7),
+//		new Bur::Station(3, 0) // 终点站为虚站
+//	},
+//};
+//int outLine = Bur::AssemblyLineDP(station, cnt);
+//Bur::PrintAssemblyLine(station, outLine, cnt);

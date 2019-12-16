@@ -13,10 +13,11 @@
 
 
 namespace Bur {
-	std::random_device rd;
+	//std::random_device rd;
 
 	int RandomizedPartition(int* a, int l, int r) {
-		int pivot = rd() % (r - l + 1) + l;
+		//int pivot = rd() % (r - l + 1) + l;
+		int pivot = l;
 		std::swap(a[pivot], a[r]);
 		pivot = a[r];
 		int i = l;
@@ -39,3 +40,8 @@ namespace Bur {
 		}
 	}
 }
+
+// test case:
+//std::cout << "QuickSort 开始时间：" << clock() << std::endl;
+//Bur::QuickSort(b, 0, LEN - 1);
+//std::cout << "QuickSort 结束时间：" << clock() << std::endl;

@@ -1,7 +1,7 @@
 /*********************************************************
 *@Author: Burnian Zhou
 *@Create Time: 11/28/2019, 17:58
-*@Last Modify: 12/06/2019, 18:25
+*@Last Modify: 12/10/2019, 19:28
 *@Desc: 图
 *********************************************************/
 #pragma once
@@ -103,7 +103,7 @@ namespace Bur {
 		// 广度优先遍历，优先遍历某个出度点，然后回溯
 		void BFS(Visit visit) {
 			std::queue<Node*> q;
-			std::unordered_set<Node*> s;
+			std::unordered_set<Node*> s; // 其底层为 hash 实现，可以实现快速查找
 			q.push(nodes[0]);
 			s.insert(nodes[0]);
 			Node* pn;

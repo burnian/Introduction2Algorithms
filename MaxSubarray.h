@@ -1,7 +1,7 @@
 /*********************************************************
 *@Author: Burnian Zhou
 *@Create Time: 09/30/2019, 00:26
-*@Last Modify: 09/30/2019, 00:26
+*@Last Modify: 12/16/2019, 23:02
 *@Desc: 分治递归求最大子数组
 *********************************************************/
 #pragma once
@@ -9,14 +9,13 @@
 
 
 namespace Bur {
-	class MSARes
+	struct MSARes
 	{
-	public:
-		MSARes(int l, int r, int s) :left(l), right(r), sum(s) {};
-	public:
 		int left;
 		int right;
 		int sum;
+
+		MSARes(int l, int r, int s) :left(l), right(r), sum(s) {};
 	};
 
 	MSARes* MaxCrossSubarray(int* arr, int lBound, int mid, int rBound) {
@@ -43,28 +42,46 @@ namespace Bur {
 		return new MSARes(lMax, rMax, lMaxSum + rMaxSum);
 	}
 
-	MSARes* MaxSubarray(int* arr, int left, int right) {
+	MSARes* MaxSubarrayDQ(int* arr, int left, int right) {
 		if(left == right)
 			return new MSARes(left, right, arr[left]);
 		int mid = (left + right) / 2;
-		MSARes* lResult = MaxSubarray(arr, left, mid);
-		MSARes* rResult = MaxSubarray(arr, mid + 1, right);
-		MSARes* mResult = MaxCrossSubarray(arr, left, mid, right);
-		if (lResult->sum > rResult->sum && lResult->sum > mResult->sum) {
-			delete(rResult);
-			delete(mResult);
-			return lResult;
+		MSARes* lRes = MaxSubarrayDQ(arr, left, mid);
+		MSARes* rRes = MaxSubarrayDQ(arr, mid + 1, right);
+		MSARes* mRes = MaxCrossSubarray(arr, left, mid, right);
+		if (lRes->sum > rRes->sum &&
+			lRes->sum > mRes->sum) {
+			delete(rRes);
+			delete(mRes);
+			return lRes;
 		}
-		else if (rResult->sum > lResult->sum && rResult->sum > mResult->sum) {
-			delete(lResult);
-			delete(mResult);
-			return rResult;
+		else if (rRes->sum > lRes->sum && rRes->sum > mRes->sum) {
+			delete(lRes);
+			delete(mRes);
+			return rRes;
 		}
 		else {
-			delete(lResult);
-			delete(rResult);
-			return mResult;
+			delete(lRes);
+			delete(rRes);
+			return mRes;
 		}
+	}
+
+	// brute-force solution
+	int MaxSubarrayBF(int n, int* a, int &besti, int &bestj)
+	{
+		int sum = -1;
+		for (int i = 0; i < n; ++i) {
+			int thissum = 0;
+			for (int j = i; j < n; ++j) {
+				thissum += a[j];
+				if (thissum > sum) {
+					sum = thissum;
+					besti = i, bestj = j;
+				}
+			}
+		}
+		return sum;
 	}
 }
 
