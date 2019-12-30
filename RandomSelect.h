@@ -10,7 +10,7 @@
 
 namespace Bur{
 	int RandomSelect(int* arr, int l, int r, int k) {
-		int idx = RandomizedPartition(arr, l, r);
+		int idx = Partition(arr, l, r);
 		int rank = idx + 1;
 		if (k < rank)
 			return RandomSelect(arr, l, idx - 1, k);

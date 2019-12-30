@@ -18,7 +18,7 @@ namespace Bur {
 	struct cmp
 	{
 		bool operator()(HCNode* lhs, HCNode* rhs) {
-			return lhs->data.second > rhs->data.second;
+			return lhs->data.second > rhs->data.second; // Ð¡¶¥¶Ñ
 		}
 	};
 

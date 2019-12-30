@@ -15,7 +15,7 @@
 namespace Bur {
 	//std::random_device rd;
 
-	int RandomizedPartition(int* a, int l, int r) {
+	int Partition(int* a, int l, int r) {
 		//int pivot = rd() % (r - l + 1) + l;
 		int pivot = l;
 		std::swap(a[pivot], a[r]);
@@ -34,7 +34,7 @@ namespace Bur {
 	void QuickSort(int* a, int l, int r) {
 		if (l < r)
 		{
-			int m = RandomizedPartition(a, l, r);
+			int m = Partition(a, l, r);
 			QuickSort(a, l, m - 1);
 			QuickSort(a, m + 1, r);
 		}

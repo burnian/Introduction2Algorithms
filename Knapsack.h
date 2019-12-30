@@ -3,6 +3,7 @@
 *@Create Time: 11/17/2019, 12:01
 *@Last Modify: 11/17/2019, 16:06
 *@Desc: 0-1背包，该算法不用对数据进行预处理，比如根据物品重量或者性价比排序
+*		所谓动态规划，指的是总是利用小规模问题的最优解来推出较大规模问题的最优解，细节上就是一个填表的过程
 *********************************************************/
 #pragma once
 #include <iostream>
@@ -11,7 +12,7 @@ namespace Bur {
 	//value weight 都是 0~n-1 的，trace 是 0~n-1,0~capacity-1 的
 	int Knapsack01(int* value, int* weight, int n, int capacity, bool** trace) {
 		int temp1, temp2;
-		// 最大价值表，纵向表示待考虑的各物品，横向表示待考虑的容量
+		// 最大价值表，纵向表示待考虑的各物品，横向表示待考虑的容量，内容为当前最大价值
 		int** tab = new int*[n + 1];
 		for (int i = 0; i <= n; i++) {
 			tab[i] = new int[capacity + 1]{ 0 };

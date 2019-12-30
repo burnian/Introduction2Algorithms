@@ -42,12 +42,12 @@ namespace Bur {
 		return new MSARes(lMax, rMax, lMaxSum + rMaxSum);
 	}
 
-	MSARes* MaxSubarrayDQ(int* arr, int left, int right) {
+	MSARes* MaxSubarrayDC(int* arr, int left, int right) {
 		if(left == right)
 			return new MSARes(left, right, arr[left]);
 		int mid = (left + right) / 2;
-		MSARes* lRes = MaxSubarrayDQ(arr, left, mid);
-		MSARes* rRes = MaxSubarrayDQ(arr, mid + 1, right);
+		MSARes* lRes = MaxSubarrayDC(arr, left, mid);
+		MSARes* rRes = MaxSubarrayDC(arr, mid + 1, right);
 		MSARes* mRes = MaxCrossSubarray(arr, left, mid, right);
 		if (lRes->sum > rRes->sum &&
 			lRes->sum > mRes->sum) {
