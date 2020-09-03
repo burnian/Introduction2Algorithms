@@ -15,8 +15,7 @@ namespace Bur {
 	using HCTree = BTree<std::pair<char, size_t> >;
 	using HCNode = HCTree::Node;
 
-	struct cmp
-	{
+	struct cmp {
 		bool operator()(HCNode* lhs, HCNode* rhs) {
 			return lhs->data.second > rhs->data.second; // Ð¡¶¥¶Ñ
 		}

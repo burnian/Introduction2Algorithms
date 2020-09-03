@@ -1,7 +1,7 @@
 /*********************************************************
 *@Author: Burnian Zhou
 *@Create Time: 09/29/2019, 12:36
-*@Last Modify: 09/29/2019, 12:36
+*@Last Modify: 01/02/2020, 17:31
 *@Desc: 桶排序
 *********************************************************/
 #pragma once
@@ -22,16 +22,16 @@ namespace Bur {
 				// 得到一个新桶
 				buckets[idx] = new Bur::LinkList<double>();
 			}
-			Bur::Node<double>* p = buckets[idx]->GetHead();
-			// 因为是链表而非顺序表，所以没用插入排序
+			Bur::LinkList<double>::Node* p = buckets[idx]->GetHead();
+			// 链表插入排序
 			while (p->next && arr[i] > *p->next->elem)
 				p = p->next;
-			buckets[idx]->InsertAfter(p, new double(arr[i]));
+			buckets[idx]->Insert(p, new double(arr[i]));
 		}
 
 		for (int i = 0, j = 0; i < N; i++) {
 			if (buckets[i]) {
-				buckets[i]->Visit([&](Bur::Node<double>* node) {
+				buckets[i]->Visit([&](Bur::LinkList<double>::Node* node) {
 					arr[j++] = *node->elem;
 				});
 			}

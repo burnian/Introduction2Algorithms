@@ -96,7 +96,4 @@ namespace Bur {
 		T w;
 	};
 
-	template<typename T>
-
-
 }

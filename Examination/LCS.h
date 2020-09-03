@@ -1,8 +1,8 @@
 /*********************************************************
 *@Author: Burnian Zhou
 *@Create Time: 11/12/2019, 17:39
-*@Last Modify: 11/16/2019, 18:40
-*@Desc: longest common subsequence 最长相同子序列。主要思想是：
+*@Last Modify: 01/01/2020, 23:01
+*@Desc: longest common subsequence 最长相同子序列。主要思想是动态规划：
 *       总是在长度为 i 的序列 A 和 j 的 序列 B 的后面分别添加一个元素
 *		1.当添加的这俩元素不同时，tab(i+1,j+1) = max(tab(i+1, j), tab(i, j+1))。最大值也不过是 tab(i, j) + 1
 *		2.当添加的这俩元素相同时，tab(i+1,j+1) = tab(i, j) + 1。证：显然 tab(i, j) + 1 <= tab(i+1,j+1) <= tab(i, j) + 2；
@@ -13,11 +13,11 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <vector>
+
 
 namespace Bur {
 	//@param str1 str2 待获取最长子序列的两个字符串
-	//@param trace 
+	//@param trace 保存俩字符串各字符比较结果的取值轨迹的二维数组
 	void LCS(const std::string& str1, const std::string& str2, int** trace) {
 		int x = str1.length();
 		int y = str2.length();
